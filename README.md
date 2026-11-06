@@ -283,79 +283,72 @@ This project was developed as a practical full-stack application for the PEN Glo
 
 **Built with Next.js, PostgreSQL, Prisma, and TypeScript.**
 
-
-
-# PEN Global – n8n Workflow Documentation
+# PEN Global – n8n Workflows
 
 ## Overview
 
-This directory contains exported n8n automation workflows developed for the PEN Global Student Management System.
+This folder contains four n8n automation workflows developed for the PEN Global Student Management System. They integrate application REST APIs, webhooks, and Google Sheets to automate administrative processes.
 
-The workflows connect the application’s REST APIs with n8n and Google Sheets to automate student enrolment, payment recording, assessment submissions, and academic result management.
+## Workflows
+
+### 1. Student Enrolment
+**File:** `PEN Global - Student Enrollment.json`
+
+- Receives student registration details through a webhook.
+- Validates student information and enrolment status.
+- Creates student records through `/api/students`.
+- Returns success or error responses.
+- Logs enrolment records in Google Sheets.
+
+### 2. Fees & Payments
+**File:** `PEN Global - Fees & Payments.json`
+
+- Receives and validates payment information.
+- Records payments through `/api/fees`.
+- Retrieves updated fee balances.
+- Returns payment confirmation or errors.
+- Logs transactions in Google Sheets.
+
+### 3. Assessment Submission
+**File:** `PEN Global - Assessment Submission.json`
+
+- Validates student and assessment details.
+- Accepts PDF and DOCX file references.
+- Checks assessment deadlines and flags late submissions.
+- Registers submission metadata.
+- Provides confirmation and error responses.
+
+### 4. Marksheets & Results
+**File:** `PEN Global - Marksheets & Results.json`
+
+- Validates student grades and publication status.
+- Calculates academic classifications.
+- Saves grades through `/api/grades`.
+- Supports published and withheld results.
+- Logs grade records in Google Sheets.
 
 ## Technology & Integrations
 
-- **n8n:** Workflow orchestration and automation
-- **Next.js REST APIs:** Backend communication
-- **PostgreSQL:** Primary application database
-- **Google Sheets:** Administrative record-keeping
-- **Webhook:** Receives external HTTP requests
-- **HTTP Request:** Communicates with application APIs
-- **Code nodes:** Data validation and business logic
+- n8n – Workflow automation
+- Next.js REST APIs – Backend integration
+- PostgreSQL – Application database
+- Google Sheets – Data logging
+- Webhooks and HTTP Request nodes – Communication
 
----
+## Setup
 
-## 1. Student Enrolment
+1. Import the JSON files into your n8n instance.
+2. Configure API URLs and webhook endpoints.
+3. Connect Google Sheets credentials.
+4. Configure required authentication.
+5. Test each workflow before activation.
 
-**File:** `PEN Global - Student Enrollment.json`
+## Important Notes
 
-**Purpose:** Automates the student registration process and creates new student records in the PEN Global application.
+- The exported workflows are inactive by default.
+- Configure your own credentials before execution.
+- Assessment submissions currently store file metadata and URLs, not actual uploaded files.
+- Review API endpoint paths and Google Sheets mappings before use.
+- Secure authentication must also be implemented in the application backend.
 
-### Workflow sequence
-
-1. **Student Enrolment – Webhook Trigger:** Receives student information through an HTTP POST request.
-2. **Validate Student Data:** Checks required fields, email format, date of birth, academic year, and enrolment status.
-3. **Prepare Student Enrolment Data:** Organizes the validated information.
-4. **Student Data Valid?:** Routes valid and invalid records.
-5. **Create Student Record:** Sends the student information to the `/api/students` endpoint.
-6. **Return Enrolment Confirmation:** Returns the successful enrolment response.
-7. **Return Validation Errors:** Explains missing or invalid information.
-8. **Return Enrolment API Error:** Handles backend API failures.
-9. **Update Google Sheet:** Records the new student's ID, name, programme code, fee amount, and timestamp.
-
-### Required input
-
-```json
-{
-  "fullName": "Michael Anderson",
-  "email": "michael.anderson@example.com",
-  "dateOfBirth": "2001-08-15",
-  "programmeId": "YOUR_PROGRAMME_ID",
-  "academicYear": "2026/2027",
-  "enrolmentStatus": "ENROLLED"
-}
-```
-
-### Supported enrolment statuses
-
-- ENROLLED
-- DEFERRED
-- WITHDRAWN
-- COMPLETED
-
----
-
-## 2. Fees & Payments
-
-**File:** `PEN Global - Fees & Payments.json`
-
-**Purpose:** Records student fee payments, retrieves updated fee balances, and maintains payment transaction records.
-
-### Workflow sequence
-
-1. **Payment Recording – Webhook Trigger:** Receives payment details.
-2. **Validate Payment Details:** Checks the fee ID, payment amount, payment date, and reference number.
-3. **Prepare Payment Data:** Organizes the validated payment information.
-4. **Payment Data Valid?:** Determines whether the payment can proceed.
-5. **Record Student Payment:** Sends the transaction to the `/api/fees` endpoint.
-
+**Repository:** [PEN Global – GitHub](https://github.com/tamalb943/PEN-Global)
