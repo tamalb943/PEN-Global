@@ -282,3 +282,80 @@ This project was developed as a practical full-stack application for the PEN Glo
 ---
 
 **Built with Next.js, PostgreSQL, Prisma, and TypeScript.**
+
+
+
+# PEN Global – n8n Workflow Documentation
+
+## Overview
+
+This directory contains exported n8n automation workflows developed for the PEN Global Student Management System.
+
+The workflows connect the application’s REST APIs with n8n and Google Sheets to automate student enrolment, payment recording, assessment submissions, and academic result management.
+
+## Technology & Integrations
+
+- **n8n:** Workflow orchestration and automation
+- **Next.js REST APIs:** Backend communication
+- **PostgreSQL:** Primary application database
+- **Google Sheets:** Administrative record-keeping
+- **Webhook:** Receives external HTTP requests
+- **HTTP Request:** Communicates with application APIs
+- **Code nodes:** Data validation and business logic
+
+---
+
+## 1. Student Enrolment
+
+**File:** `PEN Global - Student Enrollment.json`
+
+**Purpose:** Automates the student registration process and creates new student records in the PEN Global application.
+
+### Workflow sequence
+
+1. **Student Enrolment – Webhook Trigger:** Receives student information through an HTTP POST request.
+2. **Validate Student Data:** Checks required fields, email format, date of birth, academic year, and enrolment status.
+3. **Prepare Student Enrolment Data:** Organizes the validated information.
+4. **Student Data Valid?:** Routes valid and invalid records.
+5. **Create Student Record:** Sends the student information to the `/api/students` endpoint.
+6. **Return Enrolment Confirmation:** Returns the successful enrolment response.
+7. **Return Validation Errors:** Explains missing or invalid information.
+8. **Return Enrolment API Error:** Handles backend API failures.
+9. **Update Google Sheet:** Records the new student's ID, name, programme code, fee amount, and timestamp.
+
+### Required input
+
+```json
+{
+  "fullName": "Michael Anderson",
+  "email": "michael.anderson@example.com",
+  "dateOfBirth": "2001-08-15",
+  "programmeId": "YOUR_PROGRAMME_ID",
+  "academicYear": "2026/2027",
+  "enrolmentStatus": "ENROLLED"
+}
+```
+
+### Supported enrolment statuses
+
+- ENROLLED
+- DEFERRED
+- WITHDRAWN
+- COMPLETED
+
+---
+
+## 2. Fees & Payments
+
+**File:** `PEN Global - Fees & Payments.json`
+
+**Purpose:** Records student fee payments, retrieves updated fee balances, and maintains payment transaction records.
+
+### Workflow sequence
+
+1. **Payment Recording – Webhook Trigger:** Receives payment details.
+2. **Validate Payment Details:** Checks the fee ID, payment amount, payment date, and reference number.
+3. **Prepare Payment Data:** Organizes the validated payment information.
+4. **Payment Data Valid?:** Determines whether the payment can proceed.
+5. **Record Student Payment:** Sends the transaction to the `/api/fees` endpoint.
+
